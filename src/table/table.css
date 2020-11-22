@@ -1,0 +1,51 @@
+:root {
+    --color-line: navy;
+    --background-odd: white;
+    --background-even: gainsboro;
+    --background-header: beige;
+  }
+
+
+tr:nth-child(even) {
+    background-color: var(--background-even);
+}
+tr:nth-child(od) {
+    background-color: var(--background-od);
+}
+
+
+th {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 200;
+    background-color: var(--background-header);
+  }
+
+
+
+.container{
+    width: 100vw;
+    height: 60vh;
+    display: flex;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.virtual_table{
+    border-collapse: collapse; 
+    width: 100%;
+    position: relative;
+}
+
+.empty {
+    display: table-row; 
+    opacity: 0; 
+    width: 1px; 
+    top: 0px;
+}
+
+.border {
+    border: 1px solid var(--color-line);
+}

@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+// import App from './App';
+import VirtualTable from './table/table';
+
 import reportWebVitals from './reportWebVitals';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <VirtualTable rows = {100000} cols = {10} />
   </React.StrictMode>,
   document.getElementById('root')
 );
