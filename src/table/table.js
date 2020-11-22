@@ -28,16 +28,18 @@ export default class VirtualTable extends Component {
         this.state.coef = props.coef && props.coef > 2 ? props.coef : 2 //how many screens of rows need to fill
         this.state.startRow = props.startRow ? props.startRow : 1
         this.state.finishRow = props.finishRow ? props.finishRow : 0
+        this.state.skipDidMount = props.skipDidMount ? props.skipDidMount : false
 
         this.onScroll = this.onScroll.bind(this)
     }
 
     componentDidMount() {
-        // console.log(this.container.id + ' did mount')
-        if (this.container) {
+        // console.log(this.container.id + ' did mount. Current clientHeight=' + this.state.clientHeight + ', containerHeight=' + this.container.clientHeight)
+        if (this.container && this.container.clientHeight !== 0) {
             this.setUpdateInfo(0, this.container.clientHeight)
+        }else if ( !(this.state.clientHeight === 0 || this.state.skipDidMount) ) {
+            this.setUpdateInfo(0, this.state.clientHeight)
         }
-        
     }
 
     generate_data(rows, cols) {
@@ -89,6 +91,7 @@ export default class VirtualTable extends Component {
     }
 
     render_real_rows(startRow, finishRow) {
+        // console.log('render real rows startRow=' + startRow + ' finishRow=' + finishRow)
         let table = [];
         for (let i = startRow - 1; i < finishRow; i++) {
             // console.log('i=' + i + ' data=' + this.state.data[i])
@@ -170,8 +173,9 @@ export default class VirtualTable extends Component {
 
     render() {
         const clientHeight = this.state.clientHeight;
+        let style = clientHeight ? {height: `${clientHeight}px`} : {}
         return (
-            <div id="container_virtual_table" ref={el => (this.container = el)} className="container border" onScroll={this.onScroll}>
+            <div id="container_virtual_table" ref={el => (this.container = el)} className="container border" style={style} onScroll={this.onScroll}>
                 {clientHeight && this.renderTable()}
             </div>
         )

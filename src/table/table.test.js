@@ -1,10 +1,7 @@
 import VirtualTable from './table';
 import renderer from 'react-test-renderer';
 
-import {shallow} from 'enzyme';
-
-
-
+import {shallow, mount, render} from 'enzyme';
 
 
 it("renders correctly", () => {
@@ -22,6 +19,7 @@ it("needs to update rows", () => {
         clientHeight: 600,
         startRow: 1,
         finishRow: 0,
+        skipDidMount: true
     }
     const wrapper0 = shallow(<VirtualTable {...props0} />)
     expect(wrapper0.instance().needToUpdate(0, 600)).toBe(true);
@@ -55,4 +53,16 @@ it("needs to update rows", () => {
     
 });
 
+
+it("has the right number of children", () => {
+    const props = {
+        rows: 100,
+        cols: 10,
+        rowHeight: 30,
+        clientHeight: 600
+    }
+    const table = mount(<VirtualTable {...props} />)
+    expect(table.find("tbody").children().length).toEqual(42)
+
+})
 
