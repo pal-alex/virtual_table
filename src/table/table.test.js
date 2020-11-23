@@ -93,7 +93,7 @@ it("has the right number of children and expected values after scrolling", () =>
 })
 
 
-it.only("has the right number of empties", () => {
+it("has the right number of empties", () => {
     const props = {
         rows: 1000000,
         cols: 10,
