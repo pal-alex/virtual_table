@@ -2,6 +2,7 @@ import VirtualTable from './table';
 import renderer from 'react-test-renderer';
 
 import {shallow, mount, render} from 'enzyme';
+import { getByText } from '@testing-library/react';
 
 
 it("renders correctly", () => {
@@ -62,7 +63,46 @@ it("has the right number of children", () => {
         clientHeight: 600
     }
     const table = mount(<VirtualTable {...props} />)
-    expect(table.find("tbody").children().length).toEqual(42)
+    expect(table.find("tbody").children().length).toEqual(42) //20*2 + 1 - rows + 1 bottom empty
 
 })
 
+it("has the right number of children and expected values after scrolling", () => {
+    const props = {
+        rows: 100,
+        cols: 10,
+        rowHeight: 30,
+        clientHeight: 600
+    }
+    const table = mount(<VirtualTable {...props} />)
+    table.find('#container_virtual_table').simulate("scroll", {target: {scrollTop: 400, clientHeight: 600}})
+    expect(table.find("tbody").children().length).toEqual(42) 
+    expect(table.find("tbody td").at(0).text()).toEqual("R1C1")
+    expect(table.find("tbody td").at(10).text()).toEqual("R2C1")
+    expect(table.find("tbody td").at(400).text()).toEqual("R41C1")
+    
+    expect(table.find("tbody td").contains("R1C1")).toEqual(true)
+    expect(table.find("tbody td").contains("R42C1")).toEqual(false)
+
+    table.find('#container_virtual_table').simulate("scroll", {target: {scrollTop: 800, clientHeight: 600}})
+    expect(table.find("tbody").children().length).toEqual(43) // + 1 top empty
+
+    expect(table.find("tbody td").contains("R15C1")).toEqual(false)
+    expect(table.find("tbody td").contains("R16C1")).toEqual(true)
+    expect(table.find("tbody td").at(0).text()).toEqual("R16C1")
+})
+
+
+it.only("has the right number of empties", () => {
+    const props = {
+        rows: 1000000,
+        cols: 10,
+        rowHeight: 30,
+        clientHeight: 600
+    }
+    const table = mount(<VirtualTable {...props} />)
+
+    expect(table.find("tbody").children().length).toEqual(44)
+    expect(table.find(".empty").length).toEqual(3)
+
+})
